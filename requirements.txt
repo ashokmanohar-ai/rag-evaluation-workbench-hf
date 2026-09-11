@@ -1,0 +1,4 @@
+gradio>=5.0,<7
+numpy>=1.26
+pandas>=2.0
+sentence-transformers>=3.0
