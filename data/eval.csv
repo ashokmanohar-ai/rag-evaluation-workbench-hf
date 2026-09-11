@@ -1,0 +1,11 @@
+query,relevant_doc_ids
+How do I verify what a FHIR server supports?,FHIR-01
+What operation returns validation issues for a Patient resource?,FHIR-02
+Which MCP outcome should protect destructive actions?,MCP-01
+How should repeated AI agent trials be evaluated?,AGENT-01
+Which metrics show ranked retrieval quality?,RAG-01
+What do k1 and b mean in BM25?,RAG-02
+How does hybrid retrieval combine exact terms and semantic similarity?,RAG-02|RAG-03
+How can multiple AI quality signals become a release decision?,AIQX-01
+What should an FDE produce from a customer requirement?,FDE-01
+How should a production deployment workflow be structured?,VERCEL-01
