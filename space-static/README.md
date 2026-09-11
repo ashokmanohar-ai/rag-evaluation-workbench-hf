@@ -2,12 +2,12 @@
 title: RAG Evaluation Workbench
 emoji: 🔎
 colorFrom: blue
-colorTo: cyan
+colorTo: indigo
 sdk: static
 app_file: index.html
 pinned: false
 license: apache-2.0
-short_description: Browser-native BM25, semantic and hybrid RAG retrieval evaluation with reproducible IR metrics.
+short_description: Browser-native RAG retrieval evaluation workbench.
 ---
 
 # RAG Evaluation Workbench
