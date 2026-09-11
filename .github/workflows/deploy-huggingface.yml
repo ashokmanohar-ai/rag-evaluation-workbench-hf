@@ -36,16 +36,19 @@ jobs:
 
       - name: Validate static Space JavaScript
         run: |
+          node --check space-static/app.js
           python - <<'PY'
           from pathlib import Path
-          import re
           html = Path("space-static/index.html").read_text(encoding="utf-8")
-          match = re.search(r'<script type="module">(.*?)</script>', html, re.S)
-          if not match:
-              raise SystemExit("Static Space module script not found")
-          Path("/tmp/space-check.mjs").write_text(match.group(1), encoding="utf-8")
+          required = [
+              'id="corpus"', 'id="eval"', 'id="retriever"',
+              'id="metrics"', 'id="perQueryTable"', 'id="evidenceTable"',
+              'id="run"', 'id="download"', 'src="./app.js"'
+          ]
+          missing = [item for item in required if item not in html]
+          if missing:
+              raise SystemExit(f"Missing required SaaS Space markers: {missing}")
           PY
-          node --check /tmp/space-check.mjs
 
       - name: Publish free static Hugging Face Space
         env:
@@ -75,7 +78,7 @@ jobs:
               repo_id=repo_id,
               repo_type="space",
               folder_path="space-static",
-              commit_message=f"Deploy static Space from GitHub {os.environ.get('GITHUB_SHA', '')[:7]}",
+              commit_message=f"Deploy SaaS static Space from GitHub {os.environ.get('GITHUB_SHA', '')[:7]}",
           )
 
           print(f"Published: https://huggingface.co/spaces/{repo_id}")
