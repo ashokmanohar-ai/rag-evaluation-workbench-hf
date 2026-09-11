@@ -1,0 +1,11 @@
+doc_id,text
+FHIR-01,"A FHIR CapabilityStatement describes server capabilities including FHIR version, supported resources, interactions, formats, search parameters and operations. Quality engineering can compare declared capability with live behavior."
+FHIR-02,"FHIR resource validation can use the $validate operation. Servers return an OperationOutcome containing issues with severity, code, diagnostics and locations. Terminology validation can use $validate-code against a CodeSystem or ValueSet."
+MCP-01,"Enterprise MCP governance should classify tool actions and enforce outcomes such as ALLOW, APPROVAL, BLOCK, RETRY and ESCALATE. Destructive or cross-tenant operations should be blocked or require explicit approval."
+AGENT-01,"Agent evaluation should measure task success, tool correctness, safety, latency and flakiness over repeated trials. Hard release gates prevent unsafe or unreliable agent versions from reaching production."
+RAG-01,"Retrieval evaluation measures whether relevant evidence appears in the ranked result set. Common information retrieval metrics include Precision at K, Recall at K, Hit Rate, Mean Reciprocal Rank and normalized Discounted Cumulative Gain."
+RAG-02,"BM25 is a lexical ranking function based on term frequency, inverse document frequency and document length normalization. The k1 parameter controls term saturation while b controls length normalization."
+RAG-03,"Semantic retrieval encodes queries and passages into vectors and ranks by cosine similarity. Hybrid retrieval combines lexical BM25 evidence with semantic similarity to improve robustness across exact terminology and paraphrases."
+AIQX-01,"AIQX aggregates evidence from agent evaluation, AgentOps, RAGOps and healthcare interoperability checks. A weighted release gate can produce PASS, CONDITIONAL GO or HOLD while retaining source provenance, timestamps and evidence hashes."
+FDE-01,"A forward deployed engineer translates customer requirements into architecture alternatives, trade-offs, risks, assumptions, proof-of-concept exit criteria and an architecture decision record."
+VERCEL-01,"A production delivery path can use source control, pull requests, preview deployments, automated checks and production promotion. Observability should include latency, errors, deployment health and evidence provenance."
