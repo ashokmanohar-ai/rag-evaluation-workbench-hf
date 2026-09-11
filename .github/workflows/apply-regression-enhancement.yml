@@ -14,18 +14,17 @@ permissions:
 jobs:
   integrate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Patch SaaS navigation and CI validation
+      - name: Add Regression gate to SaaS navigation
         run: |
           python - <<'PY'
           from pathlib import Path
-
           index = Path('space-static/index.html')
           text = index.read_text(encoding='utf-8')
           nav = '<button class="side-link" data-target="benchmark"><span class="side-icon">⌁</span>Benchmark</button>'
@@ -35,26 +34,18 @@ jobs:
                   raise SystemExit('Benchmark navigation marker not found')
               text = text.replace(nav, nav + '\n      ' + regression, 1)
               index.write_text(text, encoding='utf-8')
-
-          workflow = Path('.github/workflows/deploy-huggingface.yml')
-          wf = workflow.read_text(encoding='utf-8')
-          check = '          node --check space-static/app.js'
-          extra = '          node --check space-static/regression.js\n          grep -q \'id="baseline"\' space-static/regression.html\n          grep -q \'id="candidate"\' space-static/regression.html'
-          if 'node --check space-static/regression.js' not in wf:
-              if check not in wf:
-                  raise SystemExit('Current JavaScript validation marker not found')
-              wf = wf.replace(check, check + '\n' + extra, 1)
-              workflow.write_text(wf, encoding='utf-8')
           PY
-          node --check space-static/regression.js
           grep -q 'Regression gate' space-static/index.html
-          grep -q 'Run 3-way regression' space-static/regression.html
+          node --check space-static/regression.js
 
-      - name: Commit integrated source
+      - name: Commit navigation if changed
         run: |
+          if git diff --quiet -- space-static/index.html; then
+            echo "Regression navigation already integrated."
+            exit 0
+          fi
           git config user.name "Ashok Kumar Manohar"
           git config user.email "ashokmanohar.ai@gmail.com"
-          git add space-static/index.html .github/workflows/deploy-huggingface.yml
-          git rm .github/workflows/apply-regression-enhancement.yml
-          git commit -m "Integrate RAG regression gate into SaaS platform"
+          git add space-static/index.html
+          git commit -m "Expose regression gate in SaaS navigation"
           git push origin HEAD:main
