@@ -29,12 +29,25 @@ jobs:
       - name: Install validation and deployment dependencies
         run: python -m pip install --upgrade pip numpy huggingface_hub
 
-      - name: Validate Python source
+      - name: Validate retrieval engine
         run: |
           python -m py_compile app.py rag_core.py test_core.py
           python test_core.py
 
-      - name: Publish to Hugging Face Spaces
+      - name: Validate static Space JavaScript
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path("space-static/index.html").read_text(encoding="utf-8")
+          match = re.search(r'<script type="module">(.*?)</script>', html, re.S)
+          if not match:
+              raise SystemExit("Static Space module script not found")
+          Path("/tmp/space-check.mjs").write_text(match.group(1), encoding="utf-8")
+          PY
+          node --check /tmp/space-check.mjs
+
+      - name: Publish free static Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_SPACE_ID: ashokrulz20/rag-evaluation-workbench
@@ -53,7 +66,7 @@ jobs:
           api.create_repo(
               repo_id=repo_id,
               repo_type="space",
-              space_sdk="gradio",
+              space_sdk="static",
               private=False,
               exist_ok=True,
           )
@@ -61,14 +74,8 @@ jobs:
           api.upload_folder(
               repo_id=repo_id,
               repo_type="space",
-              folder_path=".",
-              ignore_patterns=[
-                  ".git/**",
-                  ".github/**",
-                  "__pycache__/**",
-                  "*.pyc",
-              ],
-              commit_message=f"Deploy from GitHub {os.environ.get('GITHUB_SHA', '')[:7]}",
+              folder_path="space-static",
+              commit_message=f"Deploy static Space from GitHub {os.environ.get('GITHUB_SHA', '')[:7]}",
           )
 
           print(f"Published: https://huggingface.co/spaces/{repo_id}")
