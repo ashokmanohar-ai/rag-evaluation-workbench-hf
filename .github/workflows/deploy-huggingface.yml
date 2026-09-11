@@ -37,6 +37,11 @@ jobs:
       - name: Validate static Space JavaScript
         run: |
           node --check space-static/app.js
+          node --check space-static/regression.js
+          grep -q 'id="baseline"' space-static/regression.html
+          grep -q 'id="candidate"' space-static/regression.html
+          grep -q 'Run 3-way regression' space-static/regression.html
+          grep -q 'Regression gate' space-static/index.html
           python - <<'PY'
           from pathlib import Path
           html = Path("space-static/index.html").read_text(encoding="utf-8")
