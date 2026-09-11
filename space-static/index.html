@@ -4,60 +4,87 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>RAG Evaluation Workbench — Ashok Kumar Manohar</title>
-  <meta name="description" content="Reproducible BM25, semantic and hybrid RAG retrieval evaluation with Precision@K, Recall@K, MRR and nDCG." />
+  <meta name="description" content="A browser-native SaaS-style workbench for reproducible BM25, semantic and hybrid RAG retrieval evaluation." />
   <style>
-    :root{--bg:#07111f;--panel:#0d1b2d;--panel2:#122238;--line:#24364e;--text:#edf6ff;--muted:#9fb3c8;--cyan:#22d3ee;--blue:#60a5fa;--green:#34d399;--amber:#fbbf24;--red:#fb7185;--white:#fff}
-    *{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#06101d 0,#0a1727 42%,#09121f 100%);color:var(--text);min-height:100vh}
-    a{color:#7dd3fc}.shell{max-width:1500px;margin:auto;padding:24px}.hero{padding:30px;border:1px solid #1e3a56;border-radius:24px;background:radial-gradient(circle at 85% 0,#0e749055,transparent 32%),linear-gradient(135deg,#0a1727,#0b243b);box-shadow:0 30px 80px #0005}.ey{font-size:12px;letter-spacing:.14em;font-weight:800;color:#67e8f9}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.02;margin:10px 0 12px}.hero p{max-width:950px;color:#bfd0e2;font-size:17px;line-height:1.6}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.badge{border:1px solid #2b4b66;background:#0c2033;padding:7px 10px;border-radius:999px;font-size:12px;color:#cce9f6}
-    .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:16px}.card{background:#0b1727dd;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 30px #0002}.card h2,.card h3{margin:0 0 10px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.field label{display:block;color:#a9bfd2;font-size:12px;font-weight:700;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;background:#07121f;color:var(--text);border:1px solid #2a3e56;border-radius:11px;padding:10px 11px;outline:none}.field textarea{min-height:265px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.5}.field input:focus,.field select:focus,.field textarea:focus{border-color:#38bdf8;box-shadow:0 0 0 3px #0ea5e922}.btn{appearance:none;border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}.primary{background:linear-gradient(90deg,#06b6d4,#3b82f6);color:white}.secondary{background:#13283d;color:#d8edf9;border:1px solid #2b4b66}.btn:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.status{font-size:13px;color:#b6c8da;margin-top:10px;min-height:20px}.status.ok{color:#7ef2c0}.status.err{color:#fda4af}.status.work{color:#fde68a}
-    .metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:16px}.metric{padding:14px;border:1px solid #29405a;background:#0b1a2c;border-radius:14px}.metric span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#91a8bd}.metric b{display:block;font-size:24px;margin-top:5px}.metric small{display:block;color:#71879a;margin-top:3px}.meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;color:#8aa0b4;font-size:12px}.meta code{background:#07121f;border:1px solid #22384d;padding:3px 6px;border-radius:6px}
-    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 10px}.tab{background:#102236;color:#afc5d8;border:1px solid #29405a;border-radius:999px;padding:8px 12px;cursor:pointer}.tab.active{background:#0e7490;color:white;border-color:#22d3ee}.pane{display:none}.pane.active{display:block}.tablewrap{overflow:auto;border:1px solid #22384d;border-radius:14px}.table{width:100%;border-collapse:collapse;min-width:900px}.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid #1f3348;font-size:12px;vertical-align:top}.table th{position:sticky;top:0;background:#102236;color:#cfe8f5;z-index:1}.table td{color:#b7cadb}.yes{color:#6ee7b7;font-weight:800}.no{color:#94a3b8}.architecture{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;overflow:auto;background:#06101b;border:1px solid #24364e;border-radius:14px;padding:16px;color:#b9e6f7;line-height:1.7}.footer{padding:28px 4px;color:#71879a;font-size:12px;text-align:center}
-    @media(max-width:1100px){.layout{grid-template-columns:1fr}.controls{grid-template-columns:repeat(2,1fr)}.metrics{grid-template-columns:repeat(3,1fr)}}@media(max-width:680px){.shell{padding:12px}.hero{padding:20px}.controls{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}}
+    :root{--bg:#f7f8fb;--surface:#fff;--surface-2:#f9fafb;--border:#e5e7eb;--border-strong:#d1d5db;--text:#111827;--muted:#667085;--subtle:#98a2b3;--blue:#2563eb;--blue-2:#1d4ed8;--blue-soft:#eff6ff;--indigo:#4f46e5;--green:#16a34a;--green-soft:#f0fdf4;--amber:#d97706;--amber-soft:#fffbeb;--red:#dc2626;--red-soft:#fef2f2;--shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px rgba(16,24,40,.06)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+    a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}
+    .app{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}
+    .sidebar{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--border);padding:18px 14px;display:flex;flex-direction:column;z-index:20}
+    .brand{display:flex;align-items:center;gap:11px;padding:7px 8px 19px;border-bottom:1px solid #f1f3f5}
+    .logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(145deg,var(--blue),var(--indigo));color:white;display:grid;place-items:center;font-weight:900;font-size:14px;box-shadow:0 8px 20px rgba(37,99,235,.22)}
+    .brand-title{font-size:14px;font-weight:800;line-height:1.2}.brand-sub{font-size:11px;color:var(--muted);margin-top:3px}
+    .nav-label{font-size:10px;letter-spacing:.12em;font-weight:800;color:#98a2b3;margin:22px 10px 8px;text-transform:uppercase}
+    .side-link{width:100%;border:0;background:transparent;border-radius:10px;padding:10px 11px;margin:2px 0;display:flex;align-items:center;gap:10px;color:#475467;font-size:13px;font-weight:650;cursor:pointer;text-align:left}
+    .side-link:hover{background:#f8fafc;color:#101828}.side-link.active{background:var(--blue-soft);color:var(--blue)}
+    .side-icon{width:26px;height:26px;border:1px solid #e6eaf0;border-radius:8px;display:grid;place-items:center;font-size:12px;background:#fff;color:#667085}
+    .side-link.active .side-icon{border-color:#bfdbfe;color:var(--blue)}
+    .sidebar-bottom{margin-top:auto;padding:14px 8px 4px;border-top:1px solid #f1f3f5}.profile{display:flex;align-items:center;gap:10px}.avatar{width:34px;height:34px;border-radius:50%;background:#111827;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}.profile b{font-size:12px}.profile span{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+    .main{min-width:0}.topbar{height:66px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}
+    .crumb{font-size:13px;color:var(--muted)}.crumb b{color:var(--text)}.top-actions{display:flex;align-items:center;gap:10px}.live{font-size:11px;font-weight:800;color:#067647;background:#ecfdf3;border:1px solid #abefc6;border-radius:999px;padding:6px 9px;display:flex;align-items:center;gap:6px}.dot{width:7px;height:7px;border-radius:50%;background:#12b76a}
+    .toplink{font-size:12px;font-weight:700;border:1px solid var(--border);background:#fff;border-radius:9px;padding:8px 11px;color:#344054}
+    .content{max-width:1500px;margin:0 auto;padding:28px 30px 40px}
+    .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:22px}.page-head h1{font-size:28px;line-height:1.15;margin:0;letter-spacing:-.03em}.page-head p{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.55;max-width:830px}.ey{font-size:11px;color:var(--blue);font-weight:800;letter-spacing:.11em;text-transform:uppercase;margin-bottom:8px}
+    .head-actions{display:flex;gap:9px;flex-wrap:wrap}.chip{font-size:11px;font-weight:700;color:#475467;background:#fff;border:1px solid var(--border);padding:7px 9px;border-radius:999px}
+    .hero{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px 22px 18px;box-shadow:var(--shadow);margin-bottom:18px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;right:-100px;top:-120px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,#dbeafe 0,rgba(219,234,254,.45) 40%,transparent 72%)}.hero > *{position:relative;z-index:1}.hero-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;align-items:center}.hero h2{margin:0;font-size:20px;letter-spacing:-.02em}.hero p{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.6}.badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.badge{font-size:10px;font-weight:800;color:#344054;background:#f8fafc;border:1px solid #e4e7ec;padding:6px 8px;border-radius:999px}.hero-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mini-kpi{border:1px solid #e5e7eb;border-radius:12px;padding:12px;background:#fbfdff}.mini-kpi span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.mini-kpi b{display:block;margin-top:5px;font-size:17px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;margin:24px 0 10px}.section-title h2{margin:0;font-size:15px}.section-title span{font-size:11px;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:1.08fr .92fr;gap:16px}.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 1px 2px rgba(16,24,40,.03)}.card h2,.card h3{margin:0 0 7px;color:#101828}.card h2{font-size:15px}.card h3{font-size:14px}.muted{color:var(--muted);font-size:12px;line-height:1.5}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}.field label{display:block;color:#344054;font-size:11px;font-weight:750;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;background:#fff;color:#101828;border:1px solid var(--border-strong);border-radius:9px;padding:9px 10px;outline:none;transition:.15s}.field textarea{min-height:260px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.55;background:#fcfcfd}.field input:focus,.field select:focus,.field textarea:focus{border-color:#84adff;box-shadow:0 0 0 3px #eff4ff}
+    .btn{appearance:none;border:0;border-radius:9px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer;transition:.15s}.btn:hover{transform:translateY(-1px)}.primary{background:var(--blue);color:#fff;box-shadow:0 3px 8px rgba(37,99,235,.18)}.primary:hover{background:var(--blue-2)}.secondary{background:#fff;color:#344054;border:1px solid var(--border-strong)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.status{font-size:11px;color:#667085;margin-top:10px;min-height:18px;padding-left:2px}.status.ok{color:#067647}.status.err{color:#b42318}.status.work{color:#b54708}
+    .metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:14px}.metric{padding:14px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 2px rgba(16,24,40,.03)}.metric span{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#667085;font-weight:700}.metric b{display:block;font-size:22px;letter-spacing:-.02em;margin-top:5px;color:#101828}.metric small{display:block;color:#98a2b3;margin-top:3px;font-size:10px}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px;color:#667085;font-size:10px}.meta span{background:#fff;border:1px solid #eaecf0;border-radius:8px;padding:6px 8px}.meta code{background:#f8fafc;border:0;padding:2px 4px;border-radius:4px;color:#344054}
+    .results-shell{scroll-margin-top:88px}.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:24px 0 12px}.tab{background:transparent;color:#667085;border:0;border-bottom:2px solid transparent;padding:10px 12px 9px;cursor:pointer;font-size:12px;font-weight:700}.tab:hover{color:#344054}.tab.active{color:var(--blue);border-bottom-color:var(--blue)}.pane{display:none}.pane.active{display:block}.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:10px}.table{width:100%;border-collapse:collapse;min-width:900px;background:#fff}.table th,.table td{text-align:left;padding:10px 11px;border-bottom:1px solid #f0f2f5;font-size:11px;vertical-align:top}.table th{position:sticky;top:0;background:#f9fafb;color:#475467;z-index:1;font-weight:750}.table td{color:#475467}.table tbody tr:hover{background:#fafcff}.yes{color:#067647;font-weight:800;background:#ecfdf3;padding:3px 6px;border-radius:6px}.no{color:#667085}.architecture{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;overflow:auto;background:#f8fafc;border:1px solid #e4e7ec;border-radius:10px;padding:16px;color:#344054;line-height:1.7;font-size:12px}.footer{padding:30px 4px 8px;color:#98a2b3;font-size:10px;text-align:center}
+    @media(max-width:1180px){.app{grid-template-columns:210px minmax(0,1fr)}.controls{grid-template-columns:repeat(2,1fr)}.metrics{grid-template-columns:repeat(3,1fr)}.hero-grid{grid-template-columns:1fr}}
+    @media(max-width:860px){.app{display:block}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--border)}.nav-label,.sidebar-bottom{display:none}.sidebar{padding:12px}.brand{border:0;padding-bottom:10px}.sidebar nav{display:flex;overflow:auto;gap:4px}.side-link{width:auto;white-space:nowrap;margin:0}.side-icon{display:none}.topbar{top:0;padding:0 16px}.content{padding:20px 16px 32px}.layout{grid-template-columns:1fr}.page-head{flex-direction:column}}
+    @media(max-width:620px){.top-actions .toplink{display:none}.controls{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.hero-kpis{grid-template-columns:1fr 1fr}.page-head h1{font-size:24px}}
   </style>
 </head>
 <body>
-<div class="shell">
-  <section class="hero">
-    <div class="ey">REPRODUCIBLE RAG QUALITY ENGINEERING</div>
-    <h1>RAG Evaluation Workbench</h1>
-    <p>Evaluate retrieval before trusting generation. Compare <b>BM25</b>, real browser-native <b>semantic embeddings</b>, and <b>hybrid retrieval</b> against a labelled relevance set using standard information-retrieval metrics — with no LLM API key and no backend.</p>
-    <div class="badges"><span class="badge">BM25</span><span class="badge">Transformers.js</span><span class="badge">MiniLM embeddings</span><span class="badge">Recall@K</span><span class="badge">MRR</span><span class="badge">nDCG@K</span><span class="badge">Evidence SHA-256</span></div>
-  </section>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">RQ</div><div><div class="brand-title">RAG Quality Cloud</div><div class="brand-sub">Evaluation Workbench</div></div></div>
+    <div class="nav-label">Workspace</div>
+    <nav>
+      <button class="side-link active" data-target="overview"><span class="side-icon">◫</span>Overview</button>
+      <button class="side-link" data-target="benchmark"><span class="side-icon">⌁</span>Benchmark</button>
+      <button class="side-link" data-target="perquery"><span class="side-icon">Σ</span>Per-query metrics</button>
+      <button class="side-link" data-target="evidence"><span class="side-icon">◎</span>Evidence</button>
+      <button class="side-link" data-target="guide"><span class="side-icon">?</span>Metric guide</button>
+      <button class="side-link" data-target="architecture"><span class="side-icon">⌘</span>Architecture</button>
+    </nav>
+    <div class="nav-label">Product</div>
+    <nav>
+      <a class="side-link" href="https://github.com/ashokmanohar-ai/rag-evaluation-workbench-hf" target="_blank"><span class="side-icon">GH</span>Source repository</a>
+      <a class="side-link" href="https://huggingface.co/spaces/ashokrulz20/rag-evaluation-workbench" target="_blank"><span class="side-icon">HF</span>Hugging Face Space</a>
+    </nav>
+    <div class="sidebar-bottom"><div class="profile"><div class="avatar">AKM</div><div><b>Ashok Kumar Manohar</b><span>AI Quality Engineering</span></div></div></div>
+  </aside>
 
-  <section class="layout">
-    <div class="card">
-      <h2>Evaluation Inputs</h2><p class="muted">Edit the corpus and relevance labels, or run the default benchmark.</p>
-      <div class="grid">
-        <div class="field" style="grid-column:span 2"><label>Corpus CSV · doc_id,text</label><textarea id="corpus"></textarea></div>
-        <div class="field" style="grid-column:span 2"><label>Evaluation CSV · query,relevant_doc_ids</label><textarea id="eval"></textarea></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>Retriever Configuration</h2><p class="muted">Semantic mode downloads a compact Hugging Face ONNX model into your browser cache on first use.</p>
-      <div class="controls">
-        <div class="field"><label>Retriever</label><select id="retriever"><option>BM25</option><option>Semantic (MiniLM)</option><option>Hybrid BM25 + Semantic</option></select></div>
-        <div class="field"><label>Top K</label><input id="topk" type="number" min="1" max="10" value="3"></div>
-        <div class="field"><label>Chunk words</label><input id="chunkWords" type="number" min="20" max="250" value="80"></div>
-        <div class="field"><label>Overlap words</label><input id="overlap" type="number" min="0" max="60" value="15"></div>
-        <div class="field"><label>BM25 k1</label><input id="k1" type="number" min="0.5" max="3" step="0.1" value="1.5"></div>
-        <div class="field"><label>BM25 b</label><input id="b" type="number" min="0" max="1" step="0.05" value="0.75"></div>
-        <div class="field"><label>Semantic weight</label><input id="semanticWeight" type="number" min="0" max="1" step="0.05" value="0.55"></div>
-        <div class="field"><label>Embedding model</label><input id="model" value="onnx-community/all-MiniLM-L6-v2-ONNX"></div>
-      </div>
-      <div class="actions"><button id="run" class="btn primary">Run Retrieval Benchmark</button><button id="download" class="btn secondary" disabled>Download Evidence JSON</button></div>
-      <div id="status" class="status">Ready. BM25 runs entirely offline after page load.</div>
-    </div>
-  </section>
+  <main class="main">
+    <header class="topbar"><div class="crumb">AI Quality Engineering / <b>RAG Evaluation</b></div><div class="top-actions"><span class="live"><span class="dot"></span>Live Space</span><a class="toplink" href="https://github.com/ashokmanohar-ai/rag-evaluation-workbench-hf" target="_blank">GitHub</a><a class="toplink" href="https://huggingface.co/spaces/ashokrulz20/rag-evaluation-workbench" target="_blank">Hugging Face</a></div></header>
 
-  <section id="metrics" class="metrics"></section>
-  <div id="meta" class="meta"></div>
+    <div class="content">
+      <section id="overview" class="page-head"><div><div class="ey">Retrieval Quality Platform</div><h1>RAG Evaluation Workbench</h1><p>Measure retrieval quality before generation reaches production. Benchmark lexical, semantic, and hybrid retrieval with labelled relevance sets and reproducible IR evidence.</p></div><div class="head-actions"><span class="chip">Keyless</span><span class="chip">Browser-native</span><span class="chip">Reproducible</span></div></section>
 
-  <div class="tabs"><button class="tab active" data-pane="perquery">Per-query Metrics</button><button class="tab" data-pane="evidence">Ranked Evidence</button><button class="tab" data-pane="guide">Metric Guide</button><button class="tab" data-pane="architecture">Architecture</button></div>
+      <section class="hero">
+        <div class="hero-grid"><div><h2>Evaluate the retrieval layer independently</h2><p>Run BM25, MiniLM semantic embeddings, or hybrid retrieval against a controlled corpus. Inspect ranked evidence, compare standard IR metrics, and export a traceable evidence artifact with SHA-256 provenance.</p><div class="badges"><span class="badge">BM25</span><span class="badge">Transformers.js</span><span class="badge">MiniLM</span><span class="badge">Recall@K</span><span class="badge">MRR</span><span class="badge">nDCG@K</span><span class="badge">SHA-256 evidence</span></div></div><div class="hero-kpis"><div class="mini-kpi"><span>Execution</span><b>100% browser-side</b></div><div class="mini-kpi"><span>API keys</span><b>None required</b></div><div class="mini-kpi"><span>Retrievers</span><b>3 modes</b></div><div class="mini-kpi"><span>Evidence</span><b>Exportable JSON</b></div></div></div>
+      </section>
 
-  <section id="perquery" class="pane active card"><h3>Per-query Metrics</h3><div id="perQueryTable" class="tablewrap"><div class="muted" style="padding:16px">Run a benchmark to populate results.</div></div></section>
-  <section id="evidence" class="pane card"><h3>Ranked Retrieval Evidence</h3><div id="evidenceTable" class="tablewrap"><div class="muted" style="padding:16px">Top-ranked chunks and relevance labels appear here.</div></div></section>
-  <section id="guide" class="pane card"><h3>Metric Guide</h3><div class="tablewrap"><table class="table"><thead><tr><th>Metric</th><th>Question it answers</th></tr></thead><tbody><tr><td>Precision@K</td><td>Of the top-K retrieved documents, how many are relevant?</td></tr><tr><td>Recall@K</td><td>Of all labelled relevant documents, how many appeared in the top K?</td></tr><tr><td>MRR</td><td>How early does the first relevant document appear?</td></tr><tr><td>nDCG@K</td><td>How good is the ranking, with stronger reward for relevant results near the top?</td></tr><tr><td>Hit Rate</td><td>Did retrieval find at least one relevant document in the top K?</td></tr><tr><td>P50 / P95 latency</td><td>What retrieval latency did the benchmark observe?</td></tr></tbody></table></div></section>
-  <section id="architecture" class="pane card"><h3>Architecture</h3><div class="architecture">Corpus + labelled relevance set
+      <div id="benchmark" class="section-title"><h2>Benchmark workspace</h2><span>Configure corpus, labels, retrieval mode and scoring parameters</span></div>
+      <section class="layout">
+        <div class="card"><h2>Evaluation data</h2><p class="muted">Edit the corpus and relevance labels, or run the included reference benchmark.</p><div class="grid"><div class="field" style="grid-column:span 2"><label>Corpus CSV · doc_id,text</label><textarea id="corpus"></textarea></div><div class="field" style="grid-column:span 2"><label>Evaluation CSV · query,relevant_doc_ids</label><textarea id="eval"></textarea></div></div></div>
+        <div class="card"><h2>Retriever configuration</h2><p class="muted">Semantic mode downloads a compact Hugging Face ONNX model into the browser cache on first use.</p><div class="controls"><div class="field"><label>Retriever</label><select id="retriever"><option>BM25</option><option>Semantic (MiniLM)</option><option>Hybrid BM25 + Semantic</option></select></div><div class="field"><label>Top K</label><input id="topk" type="number" min="1" max="10" value="3"></div><div class="field"><label>Chunk words</label><input id="chunkWords" type="number" min="20" max="250" value="80"></div><div class="field"><label>Overlap words</label><input id="overlap" type="number" min="0" max="60" value="15"></div><div class="field"><label>BM25 k1</label><input id="k1" type="number" min="0.5" max="3" step="0.1" value="1.5"></div><div class="field"><label>BM25 b</label><input id="b" type="number" min="0" max="1" step="0.05" value="0.75"></div><div class="field"><label>Semantic weight</label><input id="semanticWeight" type="number" min="0" max="1" step="0.05" value="0.55"></div><div class="field"><label>Embedding model</label><input id="model" value="onnx-community/all-MiniLM-L6-v2-ONNX"></div></div><div class="actions"><button id="run" class="btn primary">Run benchmark</button><button id="download" class="btn secondary" disabled>Download evidence</button></div><div id="status" class="status">Ready. BM25 runs entirely offline after page load.</div></div>
+      </section>
+
+      <div class="section-title"><h2>Evaluation summary</h2><span>Aggregate metrics from the latest benchmark run</span></div>
+      <section id="metrics" class="metrics"><div class="metric"><span>Recall@K</span><b>—</b></div><div class="metric"><span>Precision@K</span><b>—</b></div><div class="metric"><span>MRR</span><b>—</b></div><div class="metric"><span>nDCG@K</span><b>—</b></div><div class="metric"><span>Hit Rate</span><b>—</b></div><div class="metric"><span>P50 latency</span><b>—</b></div></section>
+      <div id="meta" class="meta"></div>
+
+      <div class="results-shell">
+        <div class="tabs"><button class="tab active" data-pane="perquery">Per-query Metrics</button><button class="tab" data-pane="evidence">Ranked Evidence</button><button class="tab" data-pane="guide">Metric Guide</button><button class="tab" data-pane="architecture">Architecture</button></div>
+        <section id="perquery" class="pane active card"><h3>Per-query metrics</h3><p class="muted">Inspect query-level retrieval quality and ranking behavior.</p><div id="perQueryTable" class="tablewrap"><div class="muted" style="padding:16px">Run a benchmark to populate results.</div></div></section>
+        <section id="evidence" class="pane card"><h3>Ranked retrieval evidence</h3><p class="muted">Review the retrieved chunks, scores, source document and relevance label behind each metric.</p><div id="evidenceTable" class="tablewrap"><div class="muted" style="padding:16px">Top-ranked chunks and relevance labels appear here.</div></div></section>
+        <section id="guide" class="pane card"><h3>Metric guide</h3><p class="muted">How to interpret the benchmark metrics used by this workbench.</p><div class="tablewrap"><table class="table"><thead><tr><th>Metric</th><th>Question it answers</th></tr></thead><tbody><tr><td>Precision@K</td><td>Of the top-K retrieved documents, how many are relevant?</td></tr><tr><td>Recall@K</td><td>Of all labelled relevant documents, how many appeared in the top K?</td></tr><tr><td>MRR</td><td>How early does the first relevant document appear?</td></tr><tr><td>nDCG@K</td><td>How good is the ranking, with stronger reward for relevant results near the top?</td></tr><tr><td>Hit Rate</td><td>Did retrieval find at least one relevant document in the top K?</td></tr><tr><td>P50 / P95 latency</td><td>What retrieval latency did the benchmark observe?</td></tr></tbody></table></div></section>
+        <section id="architecture" class="pane card"><h3>Architecture</h3><p class="muted">The benchmark evaluates document-level retrieval quality even when retrieval operates on chunks.</p><div class="architecture">Corpus + labelled relevance set
           │
           ▼
    Chunking configuration
@@ -74,116 +101,12 @@
 Precision@K · Recall@K · MRR · nDCG · Hit Rate · latency
           │
           ▼
-Evidence JSON + SHA-256 provenance</div><p class="muted">Semantic embeddings execute in the browser through Hugging Face Transformers.js. Evaluation remains document-level even when retrieval is chunk-level, so repeated chunks do not inflate the metrics.</p></section>
-
-  <div class="footer">Ashok Kumar Manohar · Test Architect · AI Quality Engineer · Agentic AI · RAG Evaluation · FDE</div>
+Evidence JSON + SHA-256 provenance</div></section>
+      </div>
+      <div class="footer">Ashok Kumar Manohar · Test Architect · AI Quality Engineer · Agentic AI · RAG Evaluation · FDE</div>
+    </div>
+  </main>
 </div>
-
-<script type="module">
-  import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
-  env.allowRemoteModels = true;
-  env.allowLocalModels = false;
-  env.useBrowserCache = true;
-
-  const DEFAULT_CORPUS = `doc_id,text
-FHIR-01,"A FHIR CapabilityStatement describes server capabilities including FHIR version, supported resources, interactions, formats, search parameters and operations. Quality engineering can compare declared capability with live behavior."
-FHIR-02,"FHIR resource validation can use the $validate operation. Servers return an OperationOutcome containing issues with severity, code, diagnostics and locations. Terminology validation can use $validate-code against a CodeSystem or ValueSet."
-MCP-01,"Enterprise MCP governance should classify tool actions and enforce outcomes such as ALLOW, APPROVAL, BLOCK, RETRY and ESCALATE. Destructive or cross-tenant operations should be blocked or require explicit approval."
-AGENT-01,"Agent evaluation should measure task success, tool correctness, safety, latency and flakiness over repeated trials. Hard release gates prevent unsafe or unreliable agent versions from reaching production."
-RAG-01,"Retrieval evaluation measures whether relevant evidence appears in the ranked result set. Common information retrieval metrics include Precision at K, Recall at K, Hit Rate, Mean Reciprocal Rank and normalized Discounted Cumulative Gain."
-RAG-02,"BM25 is a lexical ranking function based on term frequency, inverse document frequency and document length normalization. The k1 parameter controls term saturation while b controls length normalization."
-RAG-03,"Semantic retrieval encodes queries and passages into vectors and ranks by cosine similarity. Hybrid retrieval combines lexical BM25 evidence with semantic similarity to improve robustness across exact terminology and paraphrases."
-AIQX-01,"AIQX aggregates evidence from agent evaluation, AgentOps, RAGOps and healthcare interoperability checks. A weighted release gate can produce PASS, CONDITIONAL GO or HOLD while retaining source provenance, timestamps and evidence hashes."
-FDE-01,"A forward deployed engineer translates customer requirements into architecture alternatives, trade-offs, risks, assumptions, proof-of-concept exit criteria and an architecture decision record."
-VERCEL-01,"A production delivery path can use source control, pull requests, preview deployments, automated checks and production promotion. Observability should include latency, errors, deployment health and evidence provenance."`;
-  const DEFAULT_EVAL = `query,relevant_doc_ids
-How do I verify what a FHIR server supports?,FHIR-01
-What operation returns validation issues for a Patient resource?,FHIR-02
-Which MCP outcome should protect destructive actions?,MCP-01
-How should repeated AI agent trials be evaluated?,AGENT-01
-Which metrics show ranked retrieval quality?,RAG-01
-What do k1 and b mean in BM25?,RAG-02
-How does hybrid retrieval combine exact terms and semantic similarity?,RAG-02|RAG-03
-How can multiple AI quality signals become a release decision?,AIQX-01
-What should an FDE produce from a customer requirement?,FDE-01
-How should a production deployment workflow be structured?,VERCEL-01`;
-
-  const $ = id => document.getElementById(id);
-  $('corpus').value = DEFAULT_CORPUS; $('eval').value = DEFAULT_EVAL;
-  let lastEvidence = null, extractor = null, extractorModel = null;
-
-  document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); btn.classList.add('active');
-    document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active')); $(btn.dataset.pane).classList.add('active');
-  }));
-
-  function setStatus(text, cls=''){ const el=$('status'); el.textContent=text; el.className='status '+cls; }
-  function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-  function parseCSV(text){
-    const rows=[]; let row=[], cell='', q=false;
-    for(let i=0;i<text.length;i++){
-      const c=text[i];
-      if(c==='"'){ if(q && text[i+1]==='"'){cell+='"';i++;} else q=!q; }
-      else if(c===','&&!q){row.push(cell);cell='';}
-      else if((c==='\n'||c==='\r')&&!q){ if(c==='\r'&&text[i+1]==='\n')i++; row.push(cell); if(row.some(x=>x.trim())) rows.push(row); row=[];cell=''; }
-      else cell+=c;
-    }
-    row.push(cell); if(row.some(x=>x.trim())) rows.push(row);
-    if(rows.length<2) throw new Error('CSV requires a header and at least one data row.');
-    const headers=rows[0].map(x=>x.trim());
-    return rows.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]??'').trim()])));
-  }
-  function tokens(text){ return (text.toLowerCase().match(/[a-z0-9_.$-]+/g)||[]); }
-  function chunkDocs(docs,size,overlap){
-    if(overlap>=size) throw new Error('Overlap must be smaller than chunk size.'); const out=[],step=size-overlap;
-    docs.forEach(d=>{const words=d.text.split(/\s+/).filter(Boolean); for(let s=0,i=1;s<words.length;s+=step,i++){const part=words.slice(s,s+size);if(!part.length)break;out.push({chunk_id:`${d.doc_id}::c${i}`,doc_id:d.doc_id,text:part.join(' ')});if(s+size>=words.length)break;}}); return out;
-  }
-  function bm25Index(chunks,k1,b){
-    const ts=chunks.map(c=>tokens(c.text)), lens=ts.map(x=>x.length), avg=lens.reduce((a,b)=>a+b,0)/Math.max(lens.length,1), df={};
-    ts.forEach(arr=>[...new Set(arr)].forEach(t=>df[t]=(df[t]||0)+1));
-    return query=>{const q=tokens(query),n=ts.length;return ts.map((arr,i)=>{const tf={};arr.forEach(t=>tf[t]=(tf[t]||0)+1);let score=0;q.forEach(term=>{const nq=df[term]||0;if(!nq)return;const idf=Math.log(1+(n-nq+.5)/(nq+.5)),f=tf[term]||0,den=f+k1*(1-b+b*lens[i]/Math.max(avg,1e-9));if(den)score+=idf*((f*(k1+1))/den);});return score;});};
-  }
-  function minmax(a){const lo=Math.min(...a),hi=Math.max(...a);if(Math.abs(hi-lo)<1e-12)return hi>0?a.map(()=>1):a.map(()=>0);return a.map(x=>(x-lo)/(hi-lo));}
-  function rank(chunks,scores){return chunks.map((c,i)=>({...c,score:+scores[i]})).sort((a,b)=>b.score-a.score);}
-  function uniqueDocs(ranked){const s=new Set(),o=[];ranked.forEach(r=>{if(!s.has(r.doc_id)){s.add(r.doc_id);o.push(r.doc_id);}});return o;}
-  function metrics(docRank,relevant,k){const rs=new Set(relevant),top=docRank.slice(0,k),hits=top.filter(d=>rs.has(d));let rr=0;for(let i=0;i<docRank.length;i++){if(rs.has(docRank[i])){rr=1/(i+1);break;}}const dcg=top.reduce((a,d,i)=>a+(rs.has(d)?1/Math.log2(i+2):0),0),ideal=Math.min(rs.size,k),idcg=Array.from({length:ideal},(_,i)=>1/Math.log2(i+2)).reduce((a,b)=>a+b,0);return{precision_at_k:hits.length/Math.max(k,1),recall_at_k:hits.length/Math.max(rs.size,1),hit_rate:hits.length?1:0,rr,ndcg_at_k:idcg?dcg/idcg:0};}
-  function percentile(arr,p){const a=[...arr].sort((x,y)=>x-y);if(!a.length)return 0;const idx=(a.length-1)*p,lo=Math.floor(idx),hi=Math.ceil(idx);return lo===hi?a[lo]:a[lo]+(a[hi]-a[lo])*(idx-lo);}
-  async function sha256(obj){const data=new TextEncoder().encode(JSON.stringify(obj));const hash=await crypto.subtle.digest('SHA-256',data);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('');}
-  function tensorRows(t){const data=Array.from(t.data), dims=t.dims||[];if(dims.length===1)return[data];const n=dims[0],d=data.length/n;return Array.from({length:n},(_,i)=>data.slice(i*d,(i+1)*d));}
-  function dot(a,b){let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s;}
-  async function getExtractor(model){if(extractor&&extractorModel===model)return extractor;if(extractor?.dispose)await extractor.dispose();setStatus('Loading Hugging Face embedding model in your browser…','work');extractor=await pipeline('feature-extraction',model,{dtype:'q8'});extractorModel=model;return extractor;}
-  async function embedBatch(model,texts){const ex=await getExtractor(model);const out=await ex(texts,{pooling:'mean',normalize:true});return tensorRows(out);}
-
-  function renderTable(target,rows,columns){if(!rows.length){$(target).innerHTML='<div class="muted" style="padding:16px">No rows.</div>';return;}$(target).innerHTML=`<table class="table"><thead><tr>${columns.map(c=>`<th>${esc(c.label)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${columns.map(c=>`<td>${c.render?c.render(r[c.key],r):esc(r[c.key])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;}
-  function renderMetrics(a){const vals=[['Recall@K',a.recall_at_k,'%',100],['Precision@K',a.precision_at_k,'%',100],['MRR',a.mrr,'',1],['nDCG@K',a.ndcg_at_k,'',1],['Hit Rate',a.hit_rate,'%',100],['P50 latency',a.p50_latency_ms,' ms',1]];$('metrics').innerHTML=vals.map(([n,v,s,m])=>`<div class="metric"><span>${n}</span><b>${m===100?(v*m).toFixed(1):v.toFixed(3)}${s}</b></div>`).join('');}
-
-  async function run(){
-    const btn=$('run');btn.disabled=true;$('download').disabled=true;setStatus('Validating benchmark inputs…','work');
-    try{
-      const docs=parseCSV($('corpus').value); if(!docs.every(d=>d.doc_id&&d.text))throw new Error('Corpus needs doc_id and text columns.');
-      const ev=parseCSV($('eval').value); if(!ev.every(r=>r.query&&r.relevant_doc_ids))throw new Error('Evaluation CSV needs query and relevant_doc_ids columns.');
-      const topK=Math.max(1,+$('topk').value||3), chunkWords=+$('chunkWords').value||80, overlap=+$('overlap').value||0,k1=+$('k1').value||1.5,b=+$('b').value||.75,sw=+$('semanticWeight').value||.55,retriever=$('retriever').value,model=$('model').value.trim();
-      const chunks=chunkDocs(docs,chunkWords,overlap), bm=bm25Index(chunks,k1,b), queries=ev.map(x=>x.query); let chunkEmb=null,queryEmb=null;
-      if(retriever!=='BM25'){setStatus('Computing semantic embeddings locally in your browser…','work');chunkEmb=await embedBatch(model,chunks.map(c=>c.text));queryEmb=await embedBatch(model,queries);}
-      const per=[],evidence=[],lat=[];
-      for(let qi=0;qi<ev.length;qi++){
-        const row=ev[qi],rel=row.relevant_doc_ids.replaceAll(';','|').split('|').map(x=>x.trim()).filter(Boolean),t0=performance.now(),bs=bm(row.query);let scores=bs;
-        if(retriever!=='BM25'){const sem=chunkEmb.map(v=>dot(v,queryEmb[qi]));scores=retriever==='Semantic (MiniLM)'?sem:minmax(bs).map((x,i)=>(1-sw)*x+sw*minmax(sem)[i]);}
-        const ranked=rank(chunks,scores),elapsed=performance.now()-t0;lat.push(elapsed);const dr=uniqueDocs(ranked),m=metrics(dr,rel,topK);
-        per.push({query:row.query,relevant:rel.join(' | '),top_docs:dr.slice(0,topK).join(' → '),precision:m.precision_at_k,recall:m.recall_at_k,rr:m.rr,ndcg:m.ndcg_at_k,hit:m.hit_rate,latency_ms:elapsed});
-        ranked.slice(0,Math.max(topK,5)).forEach((x,i)=>evidence.push({query:row.query,rank:i+1,doc_id:x.doc_id,chunk_id:x.chunk_id,score:x.score,relevant:rel.includes(x.doc_id)?'YES':'NO',text:x.text}));
-      }
-      const avg=k=>per.reduce((a,r)=>a+r[k],0)/per.length,agg={precision_at_k:avg('precision'),recall_at_k:avg('recall'),mrr:avg('rr'),ndcg_at_k:avg('ndcg'),hit_rate:avg('hit'),p50_latency_ms:percentile(lat,.5),p95_latency_ms:percentile(lat,.95),documents:docs.length,chunks:chunks.length,queries:ev.length};
-      const runId='RAG-'+new Date().toISOString().replace(/[-:.]/g,'').replace('T','T').replace('Z','Z'),payload={schema_version:'1.0',run_id:runId,retriever,configuration:{top_k:topK,chunk_words:chunkWords,overlap_words:overlap,bm25_k1:k1,bm25_b:b,semantic_model:model,semantic_weight:sw},aggregate:agg,per_query:per};payload.evidence_sha256=await sha256(payload);lastEvidence=payload;
-      renderMetrics(agg);$('meta').innerHTML=`<span><b>${esc(retriever)}</b></span><span>Run <code>${esc(runId)}</code></span><span>Evidence <code>${payload.evidence_sha256.slice(0,16)}</code></span><span>${docs.length} docs · ${chunks.length} chunks · ${ev.length} queries</span>`;
-      renderTable('perQueryTable',per,[{key:'query',label:'Query'},{key:'relevant',label:'Relevant'},{key:'top_docs',label:'Top docs'},{key:'precision',label:`Precision@${topK}`,render:v=>v.toFixed(3)},{key:'recall',label:`Recall@${topK}`,render:v=>v.toFixed(3)},{key:'rr',label:'RR',render:v=>v.toFixed(3)},{key:'ndcg',label:`nDCG@${topK}`,render:v=>v.toFixed(3)},{key:'hit',label:'Hit'},{key:'latency_ms',label:'Latency ms',render:v=>v.toFixed(2)}]);
-      renderTable('evidenceTable',evidence,[{key:'query',label:'Query'},{key:'rank',label:'Rank'},{key:'doc_id',label:'Doc'},{key:'chunk_id',label:'Chunk'},{key:'score',label:'Score',render:v=>v.toFixed(5)},{key:'relevant',label:'Relevant',render:v=>`<span class="${v==='YES'?'yes':'no'}">${v}</span>`},{key:'text',label:'Evidence text'}]);
-      $('download').disabled=false;setStatus(`Completed ${retriever} benchmark. Evidence is reproducible and ready to export.`,'ok');
-    }catch(e){console.error(e);setStatus(e?.message||String(e),'err');}finally{btn.disabled=false;}
-  }
-  $('run').addEventListener('click',run);
-  $('download').addEventListener('click',()=>{if(!lastEvidence)return;const blob=new Blob([JSON.stringify(lastEvidence,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${lastEvidence.run_id}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
-</script>
+<script type="module" src="./app.js"></script>
 </body>
 </html>
